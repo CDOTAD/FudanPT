@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="/static/css/bootstrap.min.css" rel='stylesheet'>
+    <link href="/static/css/test.css" rel='stylesheet'>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/vue.js"></script>
+    <title> 初试成绩爬取</title>
+</head>
+
+<body>
+    <!--
+    <nav class="navbar navbar-inverse">
+        <ul class="navbar-header">
+            <a class="navbar-brand" href="#">初始成绩爬取</a>
+        </ul>
+    </nav>
+    <div class="container">
+            <div class="row">
+                <div class="col-sm-12 ">
+                    <div class="site-heading">
+                        <svg width="600" height="91" viewBox="0 0 600 91" preserveAspectRatio="xMidYMid meet">
+                            <symbol id="test">
+                                <text text-anchor="middle" x="300" y="64" fill-opacity="0" style="font-size: 82px;">初试成绩查询</text>
+                            </symbol>
+    
+                            <use xlink:href="#test" id="path_1"></use>
+                            <use xlink:href="#test" id="path_2"></use>
+    
+                        </svg>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    -->
+
+<!--
+    <div class="container container-center jumbotron">
+        <div class="col-sm-4 col-sm-offset-4">
+            <div id="app" class="form-group">
+                <p class="form-control" v-text="aaa"></p>
+                <span>Input here:</span>
+                <input class="form-control" v-model="aaa">
+            </div>
+        </div>
+    </div>
+
+    
+
+    {{ string }}
+    <img src="/static/{{string}}.png">
+-->
+
+    <div class="container container-center jumbotron">
+        <div class="row row-centered">
+            <div class="col-sm-4">
+                <p hidden> hidden</p>
+            </div>
+            <div class="col-sm-4 center-block" >
+                <img style="width: 220px; height: 60px" class="center-block" src="/static/logo.png">
+            </div>
+            <div class="col-sm-4">
+                <p hidden>hidden</p>
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-sm-4">
+                <p hidden>hidden</p>
+            </div>
+            <div class="col-sm-4">
+                <div class='text-center login-title'>
+                    初试成绩爬取
+                </div>
+
+            </div>
+            <div class="col-sm-4">
+                <p hidden>hidden</p>
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-sm-4">
+                <p hidden>hidden</p>
+            </div>
+            <div class="col-sm-4 col-sm-offset-4">
+                
+                    <span>准考证号 :</span>
+                    <input class="form-control" type="text" id="username"> <br/>
+                    <span>身份证号 :</span>
+                    <input class="form-control" type="password" id="password"><br/>
+                    
+                    <span>验证码 :</span>
+                    <input class="form-control" type="text" id="varycode"><br/>
+                    <img src="/static/{{string}}.png">
+                    
+                    <input type="button" value="submit" id='button_search'/>
+                    <p hidden id="cookie">{{string}}</p>
+                    <p>本网站仅保存了准考证号和总分，其他信息都没有保存，请不要担心个人信息问题！
+                        另外，专硕的实时排名可以通过http://111.231.132.97:1234/ranking进行查询</p>
+                
+            </div>
+            <div class='col-sm-4'>
+                <p hidden>hidden</p>
+            </div>
+        </div>
+    </div>
+    
+
+    <script type="text/javascript">
+    /*
+    function doPost(url)
+    {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var varycode = document.getElementById("varycode").value;
+        var cookie = document.getElementById("cookie").innerText;
+
+        $.post(url, {'username': username, 'password': password, 'varycode': varycode, 'cookie': cookie});
+    }
+    */
+    $(function(){
+        var myPost = function(username, password, varycode, crawcookie){
+            var uri = '/hello/';
+
+            var postData = {'username': username, 'password': password, 'varycode': varycode, 'crawcookie': crawcookie};
+            
+            console.log(postData)
+            $.ajax({
+                type:"post",
+                url:uri,
+                contentType:"application/json",
+                data:JSON.stringify(postData),
+                success: function(data, status){
+                    console.log(data);
+
+                    result_status = Number(data['status']);
+                    console.log(result_status);
+                    if(result_status == 1){
+                        alert(data['data']+' 请刷新页面');
+                    }
+                    else if(result_status == 0){
+                        if (Number(data['st_type'] == 0))
+                        {
+                            alert(data['st_name'] +' 专硕' + data['total_grade'] + ' rank: ' + data['rank']);
+                        }
+                        else if (Number(data['st_type'] == 1))
+                        {
+                            alert(data['st_name'] +' 学硕 ' + data['total_grade'] + 'rank: ' + data['rank']);
+                        }
+                        else{
+                            alert(data['st_name']+' ' + data['st_type']+' '+ data['total_grade']);
+                        }
+
+                    }
+
+                }
+            });
+        }
+
+        $('#button_search').click(function(){
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var varycode = $('#varycode').val();
+            var crawcookie = $('#cookie').text();
+
+            myPost(username, password, varycode, crawcookie);
+
+        });
+        
+    });
+    
+    </script>
+</body>
+
+</html>
