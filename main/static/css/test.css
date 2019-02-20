@@ -1,0 +1,54 @@
+@media (max-width:800px) {
+    .post-toc {
+      margin-left: 10px;
+    }
+  }
+  
+  article .container .row img:hover {
+    max-width: 1000px;
+  }
+  
+  .post-toc .toc-child {
+    padding-left: 40px;
+  }
+  
+  .post-toc li {
+    list-style: none;
+  }
+  
+  #path_1 {
+      stroke-width: 4;
+      stroke: black;
+      stroke-dashoffset: 7% 7%;
+      stroke-dasharray: 0 35%;
+      -moz-animation: animation 5s ease infinite forwards;
+      -o-animation: animation 5s ease infinite forwards;
+      -webkit-animation: animation 5s ease infinite forwards;
+  }
+  
+  @-webkit-keyframes animation {
+      100% {
+          stroke-dasharray: 7% 7%;
+          stroke-dashoffset: 7%;
+      }
+  }
+  
+  #path_2 {
+      stroke-width: 4;
+      stroke: black;
+      stroke-dashoffset: 7% 7%;
+      stroke-dasharray: 0 35%;
+      -moz-animation: animation 5s ease infinite forwards;
+      -o-animation: animation 5s ease-in-out infinite forwards;
+      -webkit-animation: animation2 5s ease-out infinite forwards;
+  }
+  
+  @-webkit-keyframes animation2 {
+      100% {
+          stroke-dasharray: 7% 7%;
+          stroke-dashoffset: 14%;
+      }
+  }
+
+.login-title { font-size: 24px; font-weight: bold; color: #282828; text-align: center; margin: 25px;}
+  
