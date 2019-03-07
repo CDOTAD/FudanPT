@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <link href="/static/css/bootstrap.min.css" rel='stylesheet'>
+    <link href="/static/css/test.css" rel='stylesheet'>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/vue.js"></script>
+    <link rel="shortcut icon" href="/static/favicon.ico"/>
+    <link rel="bookmark" href="/static/favicon.ico" type="image/x-icon"/>
+    <title>专硕成绩排名</title>
+</html>
+<body>
+    <div id="rank" class="table table-striped table-bordered">
+
+    </div>
+    
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+    $.getJSON('/rank/?type=0').done(function(data){
+
+        console.log(data);
+
+        
+        
+        var table = document.getElementById("rank");
+        
+        var total_grade = document.createTextNode("总分");
+        var rank = document.createTextNode("排名");
+
+        var tr = document.createElement("tr");
+
+        var td1 = document.createElement("td");
+        var td2 = document.createElement("td");
+
+        td1.append(total_grade);
+        td2.append(rank);
+
+        tr.append(td1);
+        tr.append(td2);
+
+        table.append(tr);
+
+
+        for (var i in data){
+            var total_grade = document.createTextNode(data[i].grade);
+            var rank = document.createTextNode(data[i].rank);
+
+            var tr = document.createElement("tr");
+
+            var td1 = document.createElement("td");
+            var td2 = document.createElement("td");
+
+            td1.append(total_grade);
+            td2.append(rank);
+
+            tr.append(td1);
+            tr.append(td2);
+
+            table.append(tr);
+            
+        }
+
+        table.setAttribute("border",1);
+
+        document.body.appendChild(table);
+        
+
+    });
+})
+</script>
