@@ -1,7 +1,7 @@
 # FudanPT
 >复旦大学研究生入学考试初试成绩爬取，都怪复旦大学不提供排名
 
-![](https://img.shields.io/badge/license-MIT-blue.svg) ![](https://img.shields.io/badge/django-2.0-green.svg) ![](https://img.shields.io/badge/pymysql-0.9.3-green.svg) ![](https://img.shields.io/badge/BeautifulSoup-4.6.0-green.svg)
+[![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![](https://img.shields.io/badge/django-2.0-green.svg) ![](https://img.shields.io/badge/pymysql-0.9.3-green.svg) ![](https://img.shields.io/badge/BeautifulSoup-4.6.0-green.svg)
 
 ## Toy Level Website
 
