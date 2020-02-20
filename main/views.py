@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from urllib import request
 from http import cookiejar
 import urllib
-from .forms import StudentForm
 import json
 from django.shortcuts import HttpResponse
 from urllib import parse
