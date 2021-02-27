@@ -29,7 +29,7 @@ server{
 		expires 30d;
 		autoindex on;
 		add_header Cache-Control private;
-		alias /home/zzl/mysite/main/static/;
+		alias /home/zzl/FudanPT/main/static/;
 	    }
 	}
 

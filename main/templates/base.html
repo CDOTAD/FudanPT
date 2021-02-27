@@ -12,48 +12,6 @@
 </head>
 
 <body>
-    <!--
-    <nav class="navbar navbar-inverse">
-        <ul class="navbar-header">
-            <a class="navbar-brand" href="#">初始成绩爬取</a>
-        </ul>
-    </nav>
-    <div class="container">
-            <div class="row">
-                <div class="col-sm-12 ">
-                    <div class="site-heading">
-                        <svg width="600" height="91" viewBox="0 0 600 91" preserveAspectRatio="xMidYMid meet">
-                            <symbol id="test">
-                                <text text-anchor="middle" x="300" y="64" fill-opacity="0" style="font-size: 82px;">初试成绩查询</text>
-                            </symbol>
-    
-                            <use xlink:href="#test" id="path_1"></use>
-                            <use xlink:href="#test" id="path_2"></use>
-    
-                        </svg>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    -->
-
-<!--
-    <div class="container container-center jumbotron">
-        <div class="col-sm-4 col-sm-offset-4">
-            <div id="app" class="form-group">
-                <p class="form-control" v-text="aaa"></p>
-                <span>Input here:</span>
-                <input class="form-control" v-model="aaa">
-            </div>
-        </div>
-    </div>
-
-    
-
-    {{ string }}
-    <img src="/static/{{string}}.png">
--->
 
     <div class="container container-center jumbotron">
         <div class="row row-centered">
@@ -84,6 +42,9 @@
         <div class='row'>
             <div class="col-sm-4">
                 <p hidden>hidden</p>
+                <p>利用<a href="https://gsas.fudan.edu.cn/ssfs/index">复旦大学官方成绩查询</a>的cookie<a href="http://10.176.64.19:1234/cookie_page">查询成绩</a></p>
+                <p>保持其网站的登录状态，并获取你在登录查询时的cookie，<a href="https://blog.csdn.net/FloatDreamed/article/details/79208719">使用google chrome查询cookie</a> </p>
+                <p>拿到cookie后，再到该页面查询成绩：<a href="http://10.176.64.19:1234/cookie_page">使用cookie查询成绩</a>，不需要填写身份证等敏感信息</p>
             </div>
             <div class="col-sm-4 col-sm-offset-4">
                 
@@ -97,6 +58,7 @@
                     <img src="/static/{{string}}.png">
                     
                     <input type="button" value="submit" id='button_search'/>
+
                     <p hidden id="cookie">{{string}}</p>
                     <p>本网站仅保存了准考证号和总分，其他信息都没有保存，请不要担心个人信息问题！
                         另外，专硕的实时排名可以通过<a href="http://111.231.132.97:1234/ranking">专硕排名</a>进行查询
@@ -175,7 +137,7 @@
         });
         
     });
-    
+
     </script>
 </body>
 

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="/static/css/bootstrap.min.css" rel='stylesheet'>
+    <link href="/static/css/test.css" rel='stylesheet'>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/vue.js"></script>
+    <link rel="shortcut icon" href="/static/favicon.ico"/>
+    <link rel="bookmark" href="/static/favicon.ico" type="image/x-icon"/>
+    <title> 信息确认</title>
+</head>
+
+<body>
+
+    <div class="container container-center jumbotron">
+        <div class="row row-centered">
+            <div class="col-sm-4">
+                <p hidden> hidden</p>
+            </div>
+            <div class="col-sm-4 center-block" >
+                <img style="width: 220px; height: 60px" class="center-block" src="/static/logo.png">
+            </div>
+            <div class="col-sm-4">
+                <p hidden>hidden</p>
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-sm-4">
+                <p hidden>hidden</p>
+            </div>
+            <div class="col-sm-4">
+                <div class='text-center login-title'>
+                    信息确认
+                </div>
+
+            </div>
+            <div class="col-sm-4">
+                <p hidden>hidden</p>
+            </div>
+        </div>
+        <div class='row'>
+            <div class="col-sm-4">
+                <p hidden>hidden</p>
+            </div>
+            <div class="col-sm-4 col-sm-offset-4">
+
+                    <span>准考证号 :</span>
+                    <input class="form-control" type="text" id="userid"> <br/>
+                    <span>初试成绩 :</span>
+                    <input class="form-control" type="text" id="score"><br/>
+
+                    <input type="button" value="submit" id='button_verify'/>
+
+            </div>
+            <div class='col-sm-4'>
+                <p hidden>hidden</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+    /*
+    function doPost(url)
+    {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var varycode = document.getElementById("varycode").value;
+        var cookie = document.getElementById("cookie").innerText;
+
+        $.post(url, {'username': username, 'password': password, 'varycode': varycode, 'cookie': cookie});
+    }
+    */
+    $(function(){
+        var verifyStudent = function(userid, score){
+            var uri = '/verify/';
+
+            var postData = {'uid': userid, 'score': score};
+
+            console.log(postData)
+            $.ajax({
+                type:"post",
+                url:uri,
+                contentType:"application/json",
+                data:JSON.stringify(postData),
+                success: function(data, status){
+                    console.log(data);
+
+                    result_status = Number(data['status']);
+                    console.log(result_status);
+                    if(result_status == 1){
+                        alert('未进行登记');
+                        window.location.href="";
+                    }
+                    else if(result_status == 0){
+                        var total_score = Number(data['score'])
+                        var is_equal = total_score == score;
+                        var equal_str;
+                        if(is_equal){
+                            equal_str = '成绩真实';
+                        }
+                        else{
+                            equal_str = '成绩虚假';
+                        }
+                        if (Number(data['st_type'] == 0))
+                        {
+                            alert(' 专硕, 总分：' + score + equal_str);
+                        }
+                        else (Number(data['st_type'] == 1))
+                        {
+                            alert(' 学硕，总分：' + score + equal_str);
+                        }
+
+                    }
+
+                }
+            });
+        }
+
+        $('#button_verify').click(function(){
+            var userid = $('#userid').val();
+            var score = $('#score').val();
+            verifyStudent(userid, score);
+
+        });
+
+    });
+
+    </script>
+</body>
+
+</html>

@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import pymysql.cursors
 import pymysql
 import numpy as np
+from main.fdu_cookie import FduCookie
 # import tesserocr
 
 # Create your views here.
@@ -45,6 +46,8 @@ def index(req):
     response_code.close()
     return render(req, 'base.html', {'string': str(cookie_value)})
 
+def cookie_homepage(req):
+    return render(req, 'base_cookie.html')
 
 def test_post(req):
     if req.method == 'GET':
@@ -73,7 +76,7 @@ def test_post(req):
         post_url = 'https://gsas.fudan.edu.cn/sscjcx/28198B369067E88DAB9FEFE85484DBF4'
         try:
             post_data = {}
-            post_data['nd'] = '2019'
+            post_data['nd'] = '2021'
             post_data['username'] = username
             post_data['password'] = password
             post_data['validateCode'] = varycode
@@ -113,14 +116,6 @@ def test_post(req):
                 
                 student_type = 0
 
-                # if '计算机' in st_type:
-                #     if '专' in st_type:
-                #         student_type = 0
-                #     else:
-                #         student_type = 1
-                # else:
-                #     student_type = 2
-
                 # 专硕
                 if '085211' in st_type:
                     student_type = 0
@@ -131,7 +126,7 @@ def test_post(req):
                     student_type = 2
 
                 rep = {'status': 0, 'st_type': student_type, 'total_grade': total_grade, 'st_name': st_name}
-                
+
                 if student_type !=2:
                     # 插入数据库
                     connect = pymysql.Connect(
@@ -183,7 +178,7 @@ def test_post(req):
                     
                     cursor.close()
                     connect.close()
-                
+
                 return HttpResponse(json.dumps(rep, ensure_ascii=False), content_type="application/json, charset=utf-8")
             else:
                 result = result[0].get_text()
@@ -197,6 +192,90 @@ def test_post(req):
             rep = {'status': 1, 'data': 'error'}
             return HttpResponse(json.dumps(rep, ensure_ascii=False), content_type="application/json, charset=utf-8")                
 
+def cookie_crow(req):
+    if req.method == 'GET':
+        return HttpResponse('get')
+    else:
+        req_data = json.loads(req.body)
+
+        cookie = req_data['crawcookie']
+        # print(cookie)
+        try:
+            fducookie = FduCookie(cookie)
+            suffix = fducookie.get_suffix()
+            # print('suffix', suffix)
+            if suffix is not None:
+                student_info = fducookie.get_score(suffix)
+
+                # print('student info', student_info)
+
+                username = student_info['uid']
+                st_name = student_info['st_name']
+                total_grade = student_info['score']
+                student_type = student_info['type']
+
+                rep = {'status': 0, 'st_type': student_type, 'total_grade': total_grade, 'st_name': st_name}
+                # print(rep)
+                if student_type !=2:
+                    # 插入数据库
+                    connect = pymysql.Connect(
+                        host='127.0.0.1',
+                        port=3306,
+                        user='root',
+                        passwd='',
+                        db='student',
+                        charset='utf8'
+                    )
+        
+                    cursor = connect.cursor()
+        
+                    sql = "SELECT * FROM student WHERE number = %d;"
+                    cursor.execute(sql % int(username))
+                    if cursor.rowcount > 0:
+                        pass
+                    else:
+                        sql = "INSERT INTO student(number, type, grade) VALUES (%s, %d, %d);"
+                        insert_data = (str(username), student_type, int(total_grade))
+                        cursor.execute(sql % insert_data)
+                        connect.commit()
+                    if student_type == 0:
+                        sql = "SELECT grade FROM student WHERE type = 0 ORDER BY grade desc;"
+                        cursor.execute(sql)
+                        grade_list = []
+                        for item in cursor.fetchall():
+                            grade_list.append(int(item[0]))
+                        # print(grade_list)
+                        total_grade = int(total_grade)
+                        index = grade_list.index(total_grade)
+                        total = cursor.rowcount
+        
+                        rep['rank'] = str(index+1) + '/' + str(total)
+                    elif student_type == 1:
+        
+                        sql = "SELECT grade FROM student WHERE type = 1 ORDER BY grade desc;"
+                        cursor.execute(sql)
+                        grade_list = []
+                        for item in cursor.fetchall():
+                            grade_list.append(int(item[0]))
+                        # print(grade_list)
+                        total_grade = int(total_grade)
+                        index = grade_list.index(total_grade)
+                        total = cursor.rowcount
+        
+                        rep['rank'] = str(index+1) + '/' + str(total)
+        
+        
+                    cursor.close()
+                    connect.close()
+
+                return HttpResponse(json.dumps(rep, ensure_ascii=False), content_type="application/json, charset=utf-8")
+            else:
+                rep = {'status': 1, 'data': "cookie is invalid"}
+                return HttpResponse(json.dumps(rep, ensure_ascii=False), content_type="application/json, charset=utf-8")
+        except urllib.error.URLError as e:
+            print(e.reason)
+            rep = {'status': 1, 'data': 'error'}
+            return HttpResponse(json.dumps(rep, ensure_ascii=False), content_type="application/json, charset=utf-8")
 
 def rank(req):
 
@@ -208,7 +287,7 @@ def rank(req):
                         host='127.0.0.1',
                         port=3306,
                         user='root',
-                        passwd='',
+                        passwd='zhangzhao1996',
                         db='student',
                         charset='utf8'
                     )
@@ -248,11 +327,51 @@ def rank(req):
 
     return HttpResponse(json.dumps(rank_list, ensure_ascii=False), content_type="application/json, charset=utf-8")
 
-
 def ranking(req):
     return render(req, 'rank.html')
 
 def rankinglm(req):
     return render(req, 'ranklm.html')
+
+def verify_student(req):
+    if req.method == 'GET':
+        return HttpResponse('get')
+    else:
+        req_data = json.loads(req.body)
+        uid = req_data['uid']
+        # print(uid)
+        connect = pymysql.Connect(
+            host='127.0.0.1',
+            port=3306,
+            user='root',
+            passwd='',
+            db='student',
+            charset='utf8'
+        )
+
+        cursor = connect.cursor()
+
+        sql = "SELECT * FROM student WHERE number = %d;"
+        cursor.execute(sql % int(uid))
+
+        if cursor.rowcount > 0:
+            item = cursor.fetchone()
+            # print(item)
+            type = int(item[-2])
+            score = int(item[-1])
+
+            rep = {'status': 0, 'st_type': type, 'score': score}
+            # print(rep)
+
+            cursor.close()
+            connect.close()
+            return HttpResponse(json.dumps(rep, ensure_ascii=False), content_type="application/json, charset=utf-8")
+        else:
+            rep = {'status': 1}
+            return HttpResponse(json.dumps(rep, ensure_ascii=False), content_type="application/json, charset=utf-8")
+
+def verify_homepage(req):
+    return render(req, 'verify_student.html')
+
 
         

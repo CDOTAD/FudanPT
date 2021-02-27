@@ -44,8 +44,24 @@
 
     使用conda安装：
     ```shell
-    conda install -c conda-forge uwsgi
+    conda install -c conda-forge uwsgi python==3.6
     conda install -c conda-forge libiconv
+    ```
+  
+    uwsgi缺少各种libxxx.so.x.x
+    参考[uwsgi loading shared libraries:libicui18n.so.58 异常处理](https://blog.csdn.net/MarsYWK/article/details/86704428)
+    ```shell
+    $ which uwsgi
+    /home/username/anaconda3/bin/uwsgi
+    
+    $ ldd /home/username/anaconda3/bin/uwsgi
+    libicui18n.so.58 => not found
+    libicuuc.so.58 => not found
+    $ find -name libicui18n.so.58 
+    /home/username/anaconda3/blablabla/libicui18n.so.58
+   
+    $ ln -s /home/username/anaconda3/blablabla/libicui18n.so.58 /lib
+    $ ln -s /home/username/anaconda3/blablabla/libicui18n.so.58 /lib64
     ```
 
 - 通过[.ini](mysite_uwsgi.ini)文件配置uwsgi并启动。
@@ -91,3 +107,16 @@
         sudo nginx -s stop
         ```
 
+- mysql
+
+  ```mysql
+    create database student;
+  
+    create table student(
+    id bigint auto_increment primary key ;
+    number longtext;
+    type int;
+    grade int;
+    );
+    
+  ```
